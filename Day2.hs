@@ -14,10 +14,41 @@ hash :: String -> (Int, Int)
 hash boxID = (fromBool $ hasOccurencies 2 cnt, fromBool $ hasOccurencies 3 cnt)
   where cnt = count boxID
 
+part1 :: [String] -> Int
+part1 boxIDs =
+  let hashes = map hash boxIDs
+      (l, r) = foldl (\(a, b) (a', b') -> (a + a', b + b')) (0, 0) hashes
+  in  l * r
+
+prod :: [a] -> [(a, a)]
+prod (x : xs) = zip (repeat x) xs ++ prod xs
+prod []       = []
+
+diff :: (Eq a) => Int -> [a] -> [a] -> Maybe Int
+diff idx (x : xs) (y : ys) = if x /= y
+  then if xs == ys then Just idx else Nothing
+  else diff (idx + 1) xs ys
+diff _ _  [] = Nothing
+diff _ [] _  = Nothing
+
+deleteAt :: Int -> [a] -> [a]
+deleteAt idx (x : xs) = if idx == 0 then xs else x : deleteAt (idx - 1) xs
+deleteAt _   _        = []
+
+commonChars :: String -> String -> Maybe String
+commonChars xs ys = (`deleteAt` xs) <$> diff 0 xs ys
+
+firstJust :: [Maybe a] -> Maybe a
+firstJust (x : xs) = case x of
+  Nothing -> firstJust xs
+  v       -> v
+firstJust [] = Nothing
+
+part2 :: [String] -> Maybe String
+part2 boxIDs = firstJust $ uncurry commonChars <$> prod boxIDs
+
 main :: IO ()
 main = do
   contents <- readFile "./Day2.txt"
   let boxIDs = lines contents
-  let hashes = map hash boxIDs
-  let (l, r) = foldl (\(a, b) (a', b') -> (a + a', b + b')) (0, 0) hashes
-  print $ l * r
+  print (part1 boxIDs, part2 boxIDs)

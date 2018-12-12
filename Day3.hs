@@ -26,22 +26,20 @@ parseClaim s = Claim id'' left' top' width' height'
   [left'  , top'      ] = map parseInt $ split ',' $ lstrip margins
   [width' , height'   ] = map parseInt $ split 'x' $ lstrip dimensions
 
-claimContains :: Point -> Claim -> Bool
-claimContains (x, y) (Claim _ l t w h) =
-  l <= x && x < l + w && t <= y && y < t + h
-
-zone :: Claim -> [Point]
-zone (Claim _ l t w h) =
+pointsWithinClaim :: Claim -> [Point]
+pointsWithinClaim (Claim _ l t w h) =
   [ (i, j) | i <- [l .. l + w - 1], j <- [t .. t + h - 1] ]
 
 produceBoard :: [Claim] -> Board
-produceBoard = foldl (\acc claim -> updateBoard acc (zone claim)) initialBoard
+produceBoard =
+  foldl (\acc claim -> updateBoard acc (pointsWithinClaim claim)) initialBoard
 
 part1 :: [Claim] -> Int
 part1 claims = length $ filter (>= 2) $ elems $ produceBoard claims
 
 part2 :: [Claim] -> [Claim]
-part2 claims = filter (all (\pt -> finalBoard ! pt == 1) . zone) claims
+part2 claims = filter (all (\pt -> finalBoard ! pt == 1) . pointsWithinClaim)
+                      claims
   where finalBoard = produceBoard claims
 
 main :: IO ()

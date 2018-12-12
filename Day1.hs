@@ -1,4 +1,3 @@
-import           Data.Maybe                     ( fromMaybe )
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as Set
 
@@ -17,8 +16,8 @@ firstDupState cur seen (x : xs) = if cur `Set.member` seen
   where new = cur + x
 firstDupState _ _ [] = Nothing
 
-part2 :: [Int] -> Int
-part2 freqs = fromMaybe (-1) $ firstDupState 0 Set.empty (cycle freqs)
+part2 :: [Int] -> Maybe Int
+part2 freqs = firstDupState 0 Set.empty (cycle freqs)
 
 main :: IO ()
 main = do

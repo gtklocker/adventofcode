@@ -1,12 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
-import           Prelude                 hiding ( readFile )
-import           Data.List                      ( null )
-import           Data.Text.IO                   ( readFile )
-import           Data.Text                      ( splitOn
-                                                , unpack
-                                                )
-
 parseInt :: String -> Int
 parseInt = read
 
@@ -16,7 +7,7 @@ parseSignedInt (s : ss) = case s of
   '-' -> -parseInt ss
 
 main :: IO ()
-main = readFile "./Day1.txt" >>= \contents ->
-  print $ sum $ map parseSignedInt $ filter (not . null) $ map unpack $ splitOn
-    "\n"
-    contents
+main = do
+  contents <- readFile "./Day1.txt"
+  let numbers = map parseSignedInt $ lines contents
+  print $ sum numbers

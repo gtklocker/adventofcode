@@ -1,19 +1,14 @@
-import           Data.Array
+import           Data.Set                       ( )
+import qualified Data.Set                      as Set
+import           Data.List                      ( sort
+                                                , group
+                                                )
 import           Utils
 
 dim :: Int
 dim = 1000
 
 type Point = (Int, Int)
-type Board = Array Point Int
-
-initialBoard :: Board
-initialBoard =
-  array ((0, 0), (dim, dim)) [ ((i, j), 0) | i <- [0 .. dim], j <- [0 .. dim] ]
-
-updateBoard :: Board -> [Point] -> Board
-updateBoard board points =
-  board // [ ((x, y), board ! (x, y) + 1) | (x, y) <- points ]
 
 data Claim = Claim { id :: Int, left :: Int, top :: Int, width :: Int, height :: Int } deriving (Show);
 
@@ -30,20 +25,20 @@ pointsWithinClaim :: Claim -> [Point]
 pointsWithinClaim (Claim _ l t w h) =
   [ (i, j) | i <- [l .. l + w - 1], j <- [t .. t + h - 1] ]
 
-produceBoard :: [Claim] -> Board
-produceBoard =
-  foldl (\acc claim -> updateBoard acc (pointsWithinClaim claim)) initialBoard
+groupPoints :: [Claim] -> [[Point]]
+groupPoints claims = group $ sort $ concatMap pointsWithinClaim claims
 
 part1 :: [Claim] -> Int
-part1 claims = length $ filter (>= 2) $ elems $ produceBoard claims
+part1 claims = length $ filter (>= 2) $ map length $ groupPoints claims
 
 part2 :: [Claim] -> [Claim]
-part2 claims = filter (all (\pt -> finalBoard ! pt == 1) . pointsWithinClaim)
-                      claims
-  where finalBoard = produceBoard claims
+part2 claims = filter
+  (all (\pt -> [pt] `Set.member` groups) . pointsWithinClaim)
+  claims
+  where groups = Set.fromList $ groupPoints claims
 
 main :: IO ()
 main = do
   contents <- readFile "./Day3.txt"
   let claims = map parseClaim $ lines contents
-  print $ part2 claims
+  print (part1 claims, part2 claims)

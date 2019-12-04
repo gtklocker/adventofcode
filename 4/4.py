@@ -1,4 +1,7 @@
-def valid(num):
+def solve(check_fn):
+    return sum(1 for i in range(171309, 643603+1) if check_fn(i))
+
+def valid_one(num):
     digit = None
     adjacent_rule_satisfied = False
     while num > 0:
@@ -11,9 +14,6 @@ def valid(num):
         if prev_digit < digit:
             return False
     return adjacent_rule_satisfied
-
-def solve_one():
-    return sum(1 for i in range(171309, 643603+1) if valid(i))
 
 def valid_two(num):
     digit = None
@@ -40,8 +40,5 @@ def valid_two(num):
         adjacent_rule_satisfied = True
     return adjacent_rule_satisfied
 
-def solve_two():
-    return sum(1 for i in range(171309, 643603+1) if valid_two(i))
-
-print(solve_one())
-print(solve_two())
+print(solve(valid_one))
+print(solve(valid_two))

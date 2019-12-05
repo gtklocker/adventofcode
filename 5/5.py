@@ -47,7 +47,9 @@ def interpret_step(mem, ptr):
         print(next_val())
     if opcode in (OPCODE_JUMP_IF_TRUE, OPCODE_JUMP_IF_FALSE):
         a, b = next_val(), next_val()
-        if (opcode == OPCODE_JUMP_IF_TRUE and a != 0) or (opcode == OPCODE_JUMP_IF_FALSE and a == 0):
+        true_sat = opcode == OPCODE_JUMP_IF_TRUE and a != 0
+        false_sat = opcode == OPCODE_JUMP_IF_FALSE and a == 0
+        if true_sat or false_sat:
             if b < len(mem):
                 return mem, b
     if opcode == OPCODE_LT:

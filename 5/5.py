@@ -50,8 +50,8 @@ def interpret_step(mem, ptr):
         true_sat = opcode == OPCODE_JUMP_IF_TRUE and a != 0
         false_sat = opcode == OPCODE_JUMP_IF_FALSE and a == 0
         if true_sat or false_sat:
-            if b < len(mem):
-                return mem, b
+            assert b < len(mem)
+            return mem, b
     if opcode == OPCODE_LT:
         x, y = next_val(), next_val()
         store(1 if x < y else 0)

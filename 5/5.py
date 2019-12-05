@@ -53,11 +53,9 @@ def interpret_step(mem, ptr):
             if b < len(mem):
                 return mem, b
     if opcode == OPCODE_LT:
-        assert params[-1] != PARAM_IMMEDIATE
         x, y = next_val(), next_val()
         store(1 if x < y else 0)
     if opcode == OPCODE_EQ:
-        assert params[-1] != PARAM_IMMEDIATE
         x, y = next_val(), next_val()
         store(1 if x == y else 0)
     return mem, next_instruction_ptr()

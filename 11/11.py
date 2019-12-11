@@ -123,7 +123,5 @@ def painted_canvas(mem, initial_color):
 
 with open("input.txt", "r") as f:
     mem = [int(x) for x in f.readline().split(',')]
-    canvas_black = painted_canvas(mem.copy(), BLACK)
-    print(len(canvas_black))
-    canvas_white = painted_canvas(mem.copy(), WHITE)
-    print_canvas(canvas_white)
+    print(len(painted_canvas(mem.copy(), BLACK)))
+    print_canvas(painted_canvas(mem.copy(), WHITE))

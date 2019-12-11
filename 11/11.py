@@ -100,12 +100,10 @@ def rot(delta, rotation):
     return delta * 1j
 
 def print_canvas(space):
-    min_x = int(min(k.real for k in space.keys()))
-    max_x = int(max(k.real for k in space.keys()))
-    min_y = int(min(k.imag for k in space.keys()))
-    max_y = int(max(k.imag for k in space.keys()))
-    for y in range(min_y, max_y+1):
-        for x in range(min_x, max_x+1):
+    xs = [int(k.real) for k in space.keys()]
+    ys = [int(k.imag) for k in space.keys()]
+    for y in range(min(ys), max(ys)+1):
+        for x in range(min(xs), max(xs)+1):
             print(' ' if space[x+y*1j] == BLACK else '*', end='')
         print()
 

@@ -99,12 +99,12 @@ def rot(delta, rotation):
         return delta * 1j**3
     return delta * 1j
 
-def print_canvas(space):
-    xs = [int(k.real) for k in space.keys()]
-    ys = [int(k.imag) for k in space.keys()]
+def print_canvas(canvas):
+    xs = [int(k.real) for k in canvas.keys()]
+    ys = [int(k.imag) for k in canvas.keys()]
     for y in range(min(ys), max(ys)+1):
         for x in range(min(xs), max(xs)+1):
-            print(' ' if space[x+y*1j] == BLACK else '*', end='')
+            print(' ' if canvas[x+y*1j] == BLACK else '*', end='')
         print()
 
 BLACK, WHITE = 0, 1
@@ -112,15 +112,15 @@ def solve(mem):
     inputs = deque([WHITE])
     pos = 0+0j
     delta = 0-1j
-    space = defaultdict(lambda: BLACK)
+    canvas = defaultdict(lambda: BLACK)
     stream = interpret(mem, inputs)
     for color, rotation in stream:
-        space[pos] = color
+        canvas[pos] = color
         delta = rot(delta, rotation)
         pos += delta
-        inputs.append(space[pos])
-    print_canvas(space)
-    print(len(space))
+        inputs.append(canvas[pos])
+    print_canvas(canvas)
+    print(len(canvas))
 
 with open("input.txt", "r") as f:
     mem = [int(x) for x in f.readline().split(',')]

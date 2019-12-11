@@ -108,8 +108,8 @@ def print_canvas(canvas):
         print()
 
 BLACK, WHITE = 0, 1
-def solve(mem):
-    inputs = deque([WHITE])
+def painted_canvas(mem, initial_color):
+    inputs = deque([initial_color])
     pos = 0+0j
     delta = 0-1j
     canvas = defaultdict(lambda: BLACK)
@@ -119,9 +119,11 @@ def solve(mem):
         delta = rot(delta, rotation)
         pos += delta
         inputs.append(canvas[pos])
-    print_canvas(canvas)
-    print(len(canvas))
+    return canvas
 
 with open("input.txt", "r") as f:
     mem = [int(x) for x in f.readline().split(',')]
-    solve(mem)
+    canvas_black = painted_canvas(mem.copy(), BLACK)
+    print(len(canvas_black))
+    canvas_white = painted_canvas(mem.copy(), WHITE)
+    print_canvas(canvas_white)

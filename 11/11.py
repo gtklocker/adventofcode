@@ -96,8 +96,8 @@ def interpret(mem, inps):
 LEFT90, RIGHT90 = 0, 1
 def rot(delta, rotation):
     if rotation == LEFT90:
-        return delta * 1j
-    return delta * 1j**3
+        return delta * 1j**3
+    return delta * 1j
 
 def print_canvas(space):
     min_x = int(min(k.real for k in space.keys()))
@@ -113,7 +113,7 @@ BLACK, WHITE = 0, 1
 def solve(mem):
     inputs = deque([WHITE])
     pos = 0+0j
-    delta = 0+1j
+    delta = 0-1j
     space = defaultdict(lambda: BLACK)
     stream = interpret(mem, inputs)
     for color, rotation in stream:

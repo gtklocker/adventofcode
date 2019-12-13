@@ -139,7 +139,7 @@ def play(mem):
     paddle = 0+0j
     score = 0
     canvas = defaultdict(lambda: 0)
-    for kind, tpl in interpret(mem.copy(), inputs):
+    for kind, tpl in interpret(mem, inputs):
         if kind == 'in':
             inputs.append(joystick)
             continue

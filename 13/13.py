@@ -138,7 +138,6 @@ def play(mem):
     ball = 0+0j
     paddle = 0+0j
     score = 0
-    canvas = defaultdict(lambda: 0)
     for kind, tpl in interpret(mem, inputs):
         if kind == 'in':
             inputs.append(joystick)
@@ -148,7 +147,6 @@ def play(mem):
         if pt == -1:
             score = tid
             continue
-        canvas[pt] = tid
         if tid == TILE_PADDLE:
             paddle = pt
         if tid == TILE_BALL:

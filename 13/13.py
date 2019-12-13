@@ -152,12 +152,8 @@ def play(mem):
         if tid == TILE_PADDLE:
             paddle = pt
         if tid == TILE_BALL:
-            delta = pt - ball
-            if delta.imag < 0: # predict that ball will bounce off
-                delta = delta.real + -1*delta.imag*1j
             ball = pt
-            prediction = paddle.imag*1j + ball.real+(sign(delta.real) * (paddle.imag-ball.imag) - sign(delta.real))
-            joystick = sign(prediction.real - paddle.real)
+            joystick = sign(ball.real - paddle.real)
     return score
 
 def count_block_tiles(mem):

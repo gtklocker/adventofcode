@@ -1,5 +1,6 @@
 from collections import deque, defaultdict
-import itertools
+from functools import lru_cache
+from itertools import count
 
 OPCODE_ADD = 1
 OPCODE_MUL = 2
@@ -115,39 +116,28 @@ def affected(mem, pt):
         if interrupt == 'out':
             return v
 
-from itertools import count
-
 with open("input.txt", "r") as f:
     mem = [int(x) for x in f.readline().split(',')]
-
-from functools import lru_cache
 
 @lru_cache(maxsize=None)
 def x_limits(y):
     min_x = None
     for x in count(0):
-        #print('testing (%d,%d)' %(x,y))
         if affected(mem, (x, y)):
-            #print('affected')
             if min_x is None:
                 min_x = x
-                #print('setting min')
         else:
             if min_x is not None:
                 return (min_x, x-1)
-#print_canvas(canvas)
 
 w, h = 100, 100
 for y in count(0):
+    print('y:', y)
     bottom_y = y + h - 1
-    #print('y', y, 'bottom_y', bottom_y)
     top_min_x, top_max_x = x_limits(y)
-    #print('top_min_x', top_min_x, 'top_max_x', top_max_x)
     right_x = top_max_x
     left_x = right_x - w + 1
     bottom_min_x, bottom_max_x = x_limits(bottom_y)
-    #print('bottom_min_x', bottom_min_x, 'top_max_x', bottom_max_x)
-    #print('left_x', left_x, 'right_x', right_x)
     if left_x >= top_min_x and bottom_min_x <= left_x and bottom_max_x >= right_x:
         print('ans:', left_x, y)
         break

@@ -107,7 +107,7 @@ with open("input.txt") as f:
     machines = [interpret(mem.copy(), inputs[i]) for i in machine_ids]
     nat_pkt = None
     nat_y_vals = set()
-    for i in itertools.count():
+    for _ in itertools.count():
         idle = True
         for machine in machine_ids:
             print('machine:', machine)

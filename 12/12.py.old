@@ -1,0 +1,58 @@
+import numpy as np
+
+positions = []
+for line in open("input2.txt"):
+    clean_line = line.strip()[1:-1]
+    coords = np.array([0]*3)
+    for i, assign in enumerate(clean_line.split(", ")):
+        _, value = assign.split("=")
+        coords[i] = int(value)
+    positions.append(coords)
+
+n = len(positions)
+velocities = [np.array([0]*3) for _ in range(n)]
+
+def pot(i):
+    return sum(abs(v) for v in positions[i])
+
+def kin(i):
+    return sum(abs(v) for v in velocities[i])
+
+def total(i):
+    return pot(i) * kin(i)
+
+def print_world():
+    for i in range(n):
+        print('pos', positions[i], 'vel', velocities[i], 'pot', pot(i), 'kin', kin(i), 'total', total(i))
+    ttot = sum(total(i) for i in range(n))
+    print('total:', ttot)
+    print("----")
+
+def state():
+    return (tuple(map(tuple, positions)), tuple(map(tuple, velocities)))
+
+NUM_STEPS = 10**9
+states = set()
+for t in range(NUM_STEPS):
+    if t % 10**3 == 0:
+        print(t, 'steps')
+    st = state() 
+    if st not in states:
+        states.add(state())
+    else:
+        print(t, 'steps', 'done')
+        print_world()
+        break
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+        
+            a = positions[i]
+            b = positions[j]
+            for dim in range(3):
+                dist = b[dim]-a[dim]
+                v = dist // abs(dist) if dist != 0 else 0
+                velocities[i][dim] += v
+    for i in range(n):
+        positions[i] += velocities[i]

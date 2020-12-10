@@ -8,7 +8,7 @@ for i in range(len(jolts)):
     prev = jolts[i]
 print(diffs[1]*(diffs[3]+1))
 
-max_ = jolts[i]+3
+max_ = jolts[-1]+3
 dp = [0]*len(jolts)
 for i in range(len(jolts)-1, -1, -1):
     if max_-jolts[i] <= 3:

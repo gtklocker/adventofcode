@@ -22,8 +22,6 @@ for y, line in enumerate(fileinput.input()):
 
 def step():
     global world, next_step
-    max_dim = [max(world, key=lambda co: co[i])[i] for i in range(n_space)]
-    min_dim = [min(world, key=lambda co: co[i])[i] for i in range(n_space)]
     new_world = set()
     new_next_step = set()
     for spot in next_step:

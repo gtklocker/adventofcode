@@ -1,5 +1,4 @@
 import fileinput
-from collections import defaultdict
 import itertools
 
 world = set()

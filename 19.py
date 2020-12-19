@@ -19,8 +19,8 @@ if second_part:
 
 def matches(rule, string):
     if isinstance(ruleset[rule], str):
-        return [string[len(ruleset[rule]):]] \
-                if string[:len(ruleset[rule])] == ruleset[rule] else []
+        l = len(ruleset[rule])
+        return [string[l:]] if string[:l] == ruleset[rule] else []
     results = []
     for subruleset in ruleset[rule]:
         subresults = [string]

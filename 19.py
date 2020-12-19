@@ -1,8 +1,10 @@
 import sys
 
-rules, msgs = map(lambda s: s.split('\n'), sys.stdin.read().strip().split('\n\n'))
+second_part = True
 
+rules, msgs = map(lambda s: s.split('\n'), sys.stdin.read().strip().split('\n\n'))
 ruleset = {}
+
 for rule in rules:
     lhs, rhs = rule.split(": ")
     if rhs[0]+rhs[-1] == '""':
@@ -11,29 +13,28 @@ for rule in rules:
         value = [[int(x) for x in smol.split()] for smol in rhs.split(" | ")]
     ruleset[int(lhs)] = value
 
+if second_part:
+    ruleset[8] = [[42], [42, 8]]
+    ruleset[11] = [[42, 31], [42, 11, 31]]
+
 def matches(rule, string):
-    #print(rule, string)
     if isinstance(ruleset[rule], str):
-        #print('checking string eq')
-        #print(string[:len(ruleset[rule])], 'vs', string)
-        if string[:len(ruleset[rule])] == ruleset[rule]:
-            return True, string[len(ruleset[rule]):]
-        else:
-            return False, ""
+        return [string[len(ruleset[rule]):]] \
+                if string[:len(ruleset[rule])] == ruleset[rule] else []
+    results = []
     for subruleset in ruleset[rule]:
-        #print('processing subruleset', subruleset)
-        m, rest = True, string
+        subresults = [string]
         for subrule in subruleset:
-            if not m or rest == "":
-                break
-            m, rest = matches(subrule, rest)
-        if m:
-            return True, rest
-    return False, ""
+            new_subresults = []
+            for r in subresults:
+                new_subresults.extend(matches(subrule, r))
+            subresults = new_subresults
+        results.extend(subresults)
+    return results
 
 ans = 0
 for msg in msgs:
-    m, rest = matches(0, msg)
-    if m and rest == "":
+    rests = matches(0, msg)
+    if '' in rests:
         ans += 1
 print(ans)

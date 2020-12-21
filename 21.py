@@ -1,6 +1,5 @@
 import fileinput
-import itertools
-from collections import defaultdict, Counter
+from collections import Counter
 
 foods = []
 all_ings = set()
@@ -15,20 +14,21 @@ for line in fileinput.input():
     foods.append((ing, allergies))
 
 contains_allergy = {}
-foods = sorted(foods, key=lambda t: len(t[1]))
 for ings, allergies in foods:
     for allergy in allergies:
         if allergy not in contains_allergy:
-            contains_allergy[allergy] = []
-        contains_allergy[allergy].append(ings)
+            contains_allergy[allergy] = set(ings)
+        contains_allergy[allergy] &= ings
 
-reduced = {}
-for allergy in contains_allergy:
-    conj = contains_allergy[allergy][0]
-    for ings in contains_allergy[allergy][1:]:
-        conj &= ings
-    reduced[allergy] = conj
-
-possible = set.union(*reduced.values())
-impossible = all_ings-possible
+impossible = all_ings - set.union(*contains_allergy.values())
 print(sum(appears[x] for x in impossible))
+
+used = set()
+final_assignment = {}
+while len(final_assignment) != len(contains_allergy):
+    for allergen, possible in contains_allergy.items():
+        rem = possible-used
+        if len(rem) == 1:
+            final_assignment[allergen] = next(iter(rem))
+            used.add(final_assignment[allergen])
+print(','.join(x[1] for x in sorted(final_assignment.items())))

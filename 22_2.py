@@ -9,7 +9,6 @@ def game(players):
         if tuple(map(tuple, players)) in history:
             return players, 0
         history.add(tuple(map(tuple, players)))
-        p1, p2 = players
         if any(p[0] > len(p)-1 for p in players):
             winner = players[0] < players[1]
         else:

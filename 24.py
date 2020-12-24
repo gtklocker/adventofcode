@@ -26,8 +26,36 @@ def proc(path):
         pos += actdir
     return pos
 
+BLACK = 1
+WHITE = 2
+def neighbors(tile):
+    for d in DIRECTIONS:
+        actdir = DIRECTIONS[d]
+        if len(d) == 2 and tile.imag % 2 == 1:
+            actdir -= 1
+        yield tile+actdir
+
+def black_neighbors(tile):
+    return len([pos for pos in neighbors(tile) if pos in visited and visited[pos] == BLACK])
+
+def step():
+    global visited
+    new_visited = {}
+    to_check = set.union(*[set(neighbors(tile)) for tile in visited if visited[tile] == BLACK])
+    for tile in to_check:
+        neigh = black_neighbors(tile)
+        if tile in visited and visited[tile] == BLACK and (neigh == 0 or neigh > 2):
+            new_visited[tile] = WHITE
+        elif (tile not in visited or visited[tile] == WHITE) and neigh == 2:
+            new_visited[tile] = BLACK
+        elif tile in visited:
+            new_visited[tile] = visited[tile]
+    visited = new_visited
+
 for path in paths:
     endedat = proc(path)
-    #print(endedat)
     visited[endedat] += 1
-print(Counter(visited.values())[1])
+print(Counter(visited.values())[BLACK])
+for i in range(100):
+    step()
+print(Counter(visited.values())[BLACK])
